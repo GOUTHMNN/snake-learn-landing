@@ -74,12 +74,12 @@ const IconXP = ({ className }) => (
 // ═══════════════════════════════════════════════════════════════════════════
 
 const kingdoms = [
-    { id: 'basics', name: 'Basics Kingdom', img: '/src/assets/icons/basics_kingdom_icon_1770173834840.png', icon: IconCastle, color: 'from-blue-600 to-indigo-600', tagline: 'The Foundation', xp: 500, unlocked: true },
-    { id: 'loops', name: 'Loops Land', img: '/src/assets/icons/loops_land_icon_1770173850108.png', icon: IconLoop, color: 'from-pink-500 to-rose-500', tagline: 'The Automation', xp: 750, unlocked: true },
-    { id: 'functions', name: 'Function Forest', img: '/src/assets/icons/function_forest_icon_1770173865403.png', icon: IconFunction, color: 'from-green-500 to-emerald-600', tagline: 'The Logic', xp: 1000, unlocked: true },
-    { id: 'oop', name: 'OOP Forest', img: '/src/assets/icons/oop_forest_icon_1770173879967.png', icon: IconStructure, color: 'from-orange-500 to-amber-500', tagline: 'The Architecture', xp: 1250, unlocked: false },
-    { id: 'modules', name: 'Module Mountains', img: '/src/assets/icons/module_mountains_icon_1770173895145.png', icon: IconModule, color: 'from-purple-500 to-violet-500', tagline: 'The Toolkit', xp: 1500, unlocked: false },
-    { id: 'algorithms', name: 'Algorithm Arena', img: '/src/assets/icons/algorithm_arena_icon_1770173910552.png', icon: IconAlgo, color: 'from-red-600 to-orange-700', tagline: 'The Competition', xp: 2000, unlocked: false },
+    { id: 'basics', name: 'Basics Kingdom', img: '/images/icons/basics_kingdom_icon_1770173834840.png', icon: IconCastle, color: 'from-blue-600 to-indigo-600', tagline: 'The Foundation', xp: 500, unlocked: true },
+    { id: 'loops', name: 'Loops Land', img: '/images/icons/loops_land_icon_1770173850108.png', icon: IconLoop, color: 'from-pink-500 to-rose-500', tagline: 'The Automation', xp: 750, unlocked: true },
+    { id: 'functions', name: 'Function Forest', img: '/images/icons/function_forest_icon_1770173865403.png', icon: IconFunction, color: 'from-green-500 to-emerald-600', tagline: 'The Logic', xp: 1000, unlocked: true },
+    { id: 'oop', name: 'OOP Forest', img: '/images/icons/oop_forest_icon_1770173879967.png', icon: IconStructure, color: 'from-orange-500 to-amber-500', tagline: 'The Architecture', xp: 1250, unlocked: false },
+    { id: 'modules', name: 'Module Mountains', img: '/images/icons/module_mountains_icon_1770173895145.png', icon: IconModule, color: 'from-purple-500 to-violet-500', tagline: 'The Toolkit', xp: 1500, unlocked: false },
+    { id: 'algorithms', name: 'Algorithm Arena', img: '/images/icons/algorithm_arena_icon_1770173910552.png', icon: IconAlgo, color: 'from-red-600 to-orange-700', tagline: 'The Competition', xp: 2000, unlocked: false },
     { id: 'ml_village', name: 'ML Village', icon: IconVillage, color: 'from-cyan-500 to-sky-500', tagline: 'The Intelligence', xp: 2500, unlocked: false },
     { id: 'ml_city', name: 'ML City', icon: IconCity, color: 'from-blue-700 to-indigo-800', tagline: 'The Neural Net', xp: 3000, unlocked: false },
     { id: 'ml_kingdom', name: 'ML Kingdom', icon: IconCrown, color: 'from-yellow-400 to-amber-500', tagline: 'The Mastery', xp: 5000, unlocked: false },
@@ -204,7 +204,7 @@ export default function ValidationLanding() {
             {/* ═══════════════════════════════════════════════════════════════════
                 NAVIGATION (BRAND IDENTITY)
                 ═══════════════════════════════════════════════════════════════════ */}
-            <nav className="fixed top-14 left-0 right-0 z-50 flex justify-center w-full px-6">
+            <nav className="fixed top-4 md:top-14 left-0 right-0 z-50 flex justify-center w-full px-6">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -275,6 +275,7 @@ export default function ValidationLanding() {
                                                     <img
                                                         src={kingdom.img}
                                                         alt={kingdom.name}
+                                                        onError={(e) => console.error("FATAL: Image failed to load:", e.target.src)}
                                                         className={`w-full h-full object-cover ${!kingdom.unlocked ? 'grayscale opacity-50' : ''}`}
                                                     />
                                                 ) : (
