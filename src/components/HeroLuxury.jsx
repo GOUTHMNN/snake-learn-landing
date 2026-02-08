@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SplineScene } from "@/components/ui/splite";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Check, Loader2, AlertCircle } from 'lucide-react';
 import { db, rtdb } from '@/lib/firebase';
-import { ref, set } from "firebase/database";
+import { ref, set, onValue } from "firebase/database";
 import { toast } from "sonner";
 
 export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
@@ -160,7 +160,9 @@ export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
                             className="relative max-w-md mb-10"
                         >
                             <div className="relative group">
+                                <label htmlFor="email-input" className="sr-only">Email address</label>
                                 <input
+                                    id="email-input"
                                     type="email"
                                     value={email}
                                     onChange={(e) => {
@@ -178,6 +180,7 @@ export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
                                 <button
                                     type="submit"
                                     disabled={status === 'loading' || status === 'success' || !email}
+                                    aria-label="Join Waitlist"
                                     className={cn(
                                         "absolute right-0 top-1/2 -translate-y-1/2 transition-colors disabled:opacity-50",
                                         status === 'error' ? "text-red-500 hover:text-red-400" : "text-zinc-400 hover:text-emerald-400 disabled:hover:text-zinc-400"
@@ -262,7 +265,7 @@ export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
                             transition={{ delay: 1, duration: 2 }}
                             className="absolute z-20 top-1/4 right-0 lg:-right-12 font-bold text-[10px] sm:text-xs tracking-[0.5em] text-white/50 -rotate-90 select-none pointer-events-none mix-blend-overlay"
                         >
-                            SNAKLEARN.COM
+                            SnakeLearn
                         </motion.div>
 
                         {/* The Spline Scene - Full Bleed on Right */}

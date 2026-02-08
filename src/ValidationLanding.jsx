@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { rtdb } from '@/lib/firebase';
+import { ref, onValue } from "firebase/database";
 
 import HeroLuxury from '@/components/HeroLuxury';
 
@@ -154,8 +156,22 @@ export default function ValidationLanding() {
 
     const [waitlistCount, setWaitlistCount] = useState(6445);
 
+    // Fetch real waitlist count on mount
+    useEffect(() => {
+        const countRef = ref(rtdb, 'waitlist');
+        const unsubscribe = onValue(countRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const count = snapshot.size;
+                // Add to base count of 6445
+                setWaitlistCount(6445 + count);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     const handleJoin = () => {
-        setWaitlistCount(prev => prev + 1);
+        // setWaitlistCount(prev => prev + 1);
     };
 
     const scrollToWaitlist = () => {
@@ -196,8 +212,8 @@ export default function ValidationLanding() {
                     <div className="w-9 h-9 text-emerald-400 icon-float">
                         <IconSnake className="w-full h-full drop-shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
                     </div>
-                    <span className="text-xl font-black tracking-wider text-white">
-                        SNAKELEARN
+                    <span className="text-xl font-semibold tracking-wider text-white">
+                        SnakeLearn
                     </span>
                     <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
                         <div className="level-badge">1</div>
