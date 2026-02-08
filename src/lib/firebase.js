@@ -15,17 +15,41 @@ const firebaseConfig = {
     databaseURL: "https://snakelearn-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-console.log('Firebase Config Loaded:', {
-    apiKey: !!firebaseConfig.apiKey,
-    projectId: firebaseConfig.projectId,
-    databaseURL: firebaseConfig.databaseURL,
-});
+// Safe Initialization
+let app = null;
+let db = null;
+let rtdb = null;
+let analytics = null;
 
-const app = initializeApp(firebaseConfig);
-export const auth = null; // Explicitly null to bypass Auth dependency
-// export const auth = getAuth(app);
-export const db = initializeFirestore(app, {
-    experimentalAutoDetectLongPolling: true
-});
-export const rtdb = getDatabase(app); // Export RTDB instance
-export const analytics = getAnalytics(app);
+const requiredKeys = ['apiKey', 'projectId', 'appId'];
+const missingKeys = requiredKeys.filter(key => !firebaseConfig[key]);
+
+if (missingKeys.length > 0) {
+    console.warn(`[SnakeLearn] Missing Firebase Environment Variables: ${missingKeys.join(', ')}. Firebase services will be disabled.`);
+} else {
+    try {
+        app = initializeApp(firebaseConfig);
+
+        // Initialize Services safely
+        try {
+            db = initializeFirestore(app, {
+                experimentalAutoDetectLongPolling: true
+            });
+        } catch (e) { console.error("Firestore init failed", e); }
+
+        try {
+            rtdb = getDatabase(app);
+        } catch (e) { console.error("RTDB init failed", e); }
+
+        try {
+            analytics = getAnalytics(app);
+        } catch (e) { console.warn("Analytics init failed (likely due to ad blocker or local env)", e); }
+
+        console.log('[SnakeLearn] Firebase connected successfully.');
+    } catch (error) {
+        console.error('[SnakeLearn] Firebase initialization error:', error);
+    }
+}
+
+export { app, db, rtdb, analytics };
+export const auth = null; // Explicitly null per requirements

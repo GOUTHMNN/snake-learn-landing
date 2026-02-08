@@ -6,6 +6,7 @@ import { ArrowRight, Check, Loader2, AlertCircle } from 'lucide-react';
 import { db, rtdb } from '@/lib/firebase';
 import { ref, set, onValue } from "firebase/database";
 import { toast } from "sonner";
+import ServiceErrorBoundary from '@/components/ServiceErrorBoundary';
 
 export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
     const [email, setEmail] = useState('');
@@ -15,6 +16,18 @@ export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
     const handleJoin = async (e) => {
         e.preventDefault();
         if (!email || status === 'loading' || status === 'success') return;
+
+        // CHECK IF FIREBASE IS INITIALIZED
+        if (!rtdb) {
+            console.warn("Firebase RTDB is not initialized. Using fallback/demo mode.");
+            setStatus('loading');
+            setTimeout(() => {
+                setStatus('success');
+                toast.success("Demo Mode: You're on the list! (Firebase disconnected)");
+                if (onJoin) onJoin();
+            }, 1000);
+            return;
+        }
 
         setStatus('loading');
         setErrorMessage('');
@@ -270,10 +283,16 @@ export default function HeroLuxury({ waitlistCount = 6445, onJoin }) {
 
                         {/* The Spline Scene - Full Bleed on Right */}
                         <div className="absolute inset-0 w-full h-full lg:scale-110">
-                            <SplineScene
-                                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                                className="w-full h-full"
-                            />
+                            <ServiceErrorBoundary fallback={
+                                <div className="w-full h-full flex items-center justify-center bg-black/20">
+                                    <div className="text-zinc-600 animate-pulse">3D Scene Loading...</div>
+                                </div>
+                            }>
+                                <SplineScene
+                                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                                    className="w-full h-full"
+                                />
+                            </ServiceErrorBoundary>
                         </div>
 
                         {/* Integration Gradients - CRITICAL for "Not Boxed" look */}

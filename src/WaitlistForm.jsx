@@ -112,6 +112,16 @@ export default function WaitlistForm({ onJoin }) {
 
         try {
             // DATABASE LOGIC (Realtime Database - No Auth)
+            if (!rtdb) {
+                // FALLBACK / DEMO MODE
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                setSuccess(true);
+                toast.success("✅ Demo Mode: You're on the waitlist!");
+                setEmail('');
+                if (onJoin) onJoin();
+                return;
+            }
+
             const waitlistRef = ref(rtdb, 'waitlist');
 
             // Timeout Promise

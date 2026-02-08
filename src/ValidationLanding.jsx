@@ -158,6 +158,8 @@ export default function ValidationLanding() {
 
     // Fetch real waitlist count on mount
     useEffect(() => {
+        if (!rtdb) return; // Feature disabled if Firebase missing
+
         const countRef = ref(rtdb, 'waitlist');
         const unsubscribe = onValue(countRef, (snapshot) => {
             if (snapshot.exists()) {
