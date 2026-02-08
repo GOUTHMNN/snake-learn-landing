@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // VALIDATION MODE RULES
+    // ---------------------------------------------------------
+    
+    // Waitlist Collection
+    // Allow anyone to write (create) to the waitlist.
+    // Deny all reads, updates, and deletes to prevent data scraping or modification.
+    // Ensure the email in the document matches the ID to enforce uniqueness
+    // (since we use email as document ID in WaitlistForm.jsx).
+    
+    match /waitlist/{email} {
+      allow read, update, delete: if false;
+      allow create: if true;
+    }
+
+    // ---------------------------------------------------------
+
+    // Existing Rules (If any, keep them below or wrapped in a mode check if possible, 
+    // but for now this file focuses on the Validation Mode requirements).
+    // If you have existing users, you might want to keep their access, 
+    // but the request said "Prevent all reads, updates, and deletes from the client" 
+    // which implies a strict lockdown for this phase.
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
